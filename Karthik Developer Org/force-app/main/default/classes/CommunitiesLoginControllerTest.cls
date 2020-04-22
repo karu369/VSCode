@@ -6,6 +6,6 @@
     global static void testCommunitiesLoginController () {
      	CommunitiesLoginController controller = new CommunitiesLoginController();
          System.assertEquals(null, controller.forwardToAuthPage());
-         system.debug("Hello world");       
+         system.debug('Hello world');       
     }    
 }
