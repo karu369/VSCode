@@ -1,0 +1,78 @@
+<apex:page controller="ContactDisplay">
+    <apex:form >
+        <apex:outputPanel id="Contact_List">
+            <apex:pageBlock title="Contacts List" rendered="{!ContactList}">
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="prev" action="{!controller.previous}" rendered="{!controller.hasPrevious}"/>
+                    <apex:commandButton value="Next" action="{!controller.next}" rendered="{!controller.hasnext}"/>
+                </apex:pageBlockButtons>
+                <apex:pageBlockTable value="{!contact}" var="ct" >
+                    <apex:column >
+                        <apex:CommandLink action="{!getSingleContact}">{!ct.Name}
+                            <apex:param name="contactId" assignTo="{!contactId}" value="{!ct.id}"/>
+                        </apex:CommandLink>
+                    </apex:column>
+                </apex:pageBlockTable>
+                <apex:commandButton value="create" action="{!newContact}"/>
+            </apex:pageBlock>
+        </apex:outputPanel>
+        <apex:outputPanel id="createContact">
+        <apex:pageBlock id="example" rendered="{!flag}">
+            <table>
+                <tr>
+                    <td><apex:outputLabel value="FirstName"/></td>
+                    <td><apex:inputText value="{!newContactVar.FirstName}">
+                        	<apex:actionSupport event="onchange" action="{!clearValues}" reRender="example,LS"/>
+                        </apex:inputText>
+                    </td>
+                </tr>
+                <tr>
+                        <td><apex:outputLabel value="LeadSource"/></td>
+                        <td><apex:inputField rendered="{!newContactVar.FirstName != null}" value="{!newContactVar.LeadSource}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputLabel value="LastName"/></td>
+                    <td><apex:inputText value="{!newContactVar.LastName}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputLabel value="MobilePhone"/></td>
+                    <td><apex:inputText value="{!newContactVar.MobilePhone}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputLabel value="Email"/></td>
+                    <td><apex:inputText value="{!newContactVar.Email}"/><br/></td>
+                </tr>
+            </table>
+            <apex:commandButton value="save" action="{!save}" reRender="Contact_List,createContact"/>
+          </apex:pageBlock>
+            </apex:outputPanel>
+   
+    <apex:pageBlock >
+        <apex:pageBlockSection rendered="{!showSingleContact}">
+            <apex:outputLabel rendered="{!!EditEnable}">FirstName :</apex:outputLabel>
+            <apex:outputLabel rendered="{!!EditEnable}">{!SingleContact.FirstName}</apex:outputLabel>  
+            <apex:inputField value="{!SingleContact.FirstName}" rendered="{!EditEnable}">
+                <apex:actionSupport event="onchange" reRender="renu"/>
+            </apex:inputField>
+            
+            <apex:outputLabel rendered="{!!EditEnable}">LeadSource :</apex:outputLabel>
+            <apex:outputLabel rendered="{!!EditEnable}">{!SingleContact.LeadSource}</apex:outputLabel>
+            <apex:pageBlockSection rendered="{!EditEnable}">
+            <apex:inputField id="renu" value="{!SingleContact.LeadSource}" rendered="{!SingleContact.FirstName != null}"/>
+                </apex:pageBlockSection>
+            <apex:outputLabel rendered="{!!EditEnable}">LastName :</apex:outputLabel>
+            <apex:outputLabel rendered="{!!EditEnable}">{!SingleContact.LastName}</apex:outputLabel>
+            <apex:inputField value="{!SingleContact.LastName}" rendered="{!EditEnable}"/>
+            <apex:outputLabel rendered="{!!EditEnable}">MobilePhone :</apex:outputLabel>
+            <apex:outputLabel rendered="{!!EditEnable}">{!SingleContact.MobilePhone}</apex:outputLabel>  
+            <apex:inputField value="{!SingleContact.MobilePhone}" rendered="{!EditEnable}"/>
+            <apex:outputLabel rendered="{!!EditEnable}">Email :</apex:outputLabel>
+            <apex:outputLabel rendered="{!!EditEnable}">{!SingleContact.Email}</apex:outputLabel>
+            <apex:inputField value="{!SingleContact.Email}" rendered="{!EditEnable}"/>
+            <apex:commandButton value="Edit" action="{!EditEnableFunction}" rendered="{!!EditEnable}"/>
+            <apex:commandButton value="Update" action="{!UpdateFunction}"  rendered="{!EditEnable}"/>
+            <apex:commandButton value="Back" action="{!MainPage}" rendered="{!showSingleContact}"/>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+         </apex:form>
+</apex:page>

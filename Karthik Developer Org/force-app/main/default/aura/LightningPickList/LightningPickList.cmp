@@ -1,0 +1,15 @@
+<aura:component controller="FPR_PicklistController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   <aura:attribute name="objectName" type="string"/>
+     <aura:attribute name="fieldName" type="string"/>
+    <aura:attribute name="fieldLabel" type="string"/>
+    <aura:attribute name="picklistValue" type="string"/>
+    <aura:attribute name="showFields" type="Boolean"/>
+    <aura:attribute name="requiredFields" type="Boolean"/>
+   <div class="slds-form-element">
+      <label class="slds-form-element__label" for="select-01">{!v.fieldLabel}</label>
+      <div class="slds-select_container">
+         <ui:inputSelect  aura:id="picklistView" class="slds-select" change="{!c.onPicklistChange}"/>
+      </div>
+   </div>
+</aura:component>

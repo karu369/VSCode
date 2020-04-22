@@ -1,0 +1,31 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="newAccount" type="Object"/>
+    <aura:attribute name="newAccountFields" type="Object"/>
+    <aura:attribute name="newAccountError" type="String"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <force:recordData aura:id="newContactForm"
+                      layoutType="FULL"
+                      targetRecord="{!v.newAccount}"
+                      targetFields="{!v.newAccountFields}"
+                      targetError="{!v.newAccountError}"/>
+    
+    <div class="createNewAccount slds-col slds-size_3-of-6">
+        <Lightning:card iconName="action:new_account" title="New Account" variant="Base">
+            <div class="slds-p-horizontal--Large">
+                <Lightning:input label="Name" Value="{!v.newAccountFields.Name}"/>
+                <Lightning:input label="Email" Value="{!v.newAccountFields.Email}"/>
+                <Lightning:input label="Phone" Value="{!v.newAccountFields.Phone}"/>
+                
+                <lightning:button label="Save" variant="brand" onClick="{!c.saveAccount}"/>
+            </div>
+        </Lightning:card>
+    </div>
+    <aura:if isTrue="{!not(empty(v.newContactError))}">
+        <div class="recordError">
+            {!v.newContactError}
+        </div>
+    </aura:if>
+    
+</aura:component>

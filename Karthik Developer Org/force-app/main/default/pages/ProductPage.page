@@ -1,0 +1,11 @@
+<apex:page controller="Product">
+    <apex:pageBlock title="Products">
+        <apex:pageBlockSection >
+           <apex:pageBlockTable value="{!Product}" var="prod">
+               <apex:column >
+                   <apex:outputField value="prod.Name"/>
+               </apex:column>
+           </apex:pageBlockTable>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>

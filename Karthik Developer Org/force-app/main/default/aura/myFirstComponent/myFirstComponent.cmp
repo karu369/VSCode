@@ -1,0 +1,6 @@
+<aura:component >
+	
+    <h1> Lightning Component</h1>
+    <p> Some sample sentence </p>
+    
+</aura:component>

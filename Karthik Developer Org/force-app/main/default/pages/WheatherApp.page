@@ -1,0 +1,4 @@
+<apex:page standardController="Account" extensions="testopenweather" showHeader="false" sidebar="false">
+    <h1>Congratulations</h1>
+    This is your new Page: testopenweather2
+</apex:page>

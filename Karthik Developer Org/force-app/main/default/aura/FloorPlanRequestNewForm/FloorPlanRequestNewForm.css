@@ -1,0 +1,11 @@
+.THIS {
+}
+.THIS.inputLongText{
+    height:500px;
+}
+.THIS .addBtn {
+    color: rgb(0, 95, 178);
+}
+.THIS .delBtn {
+    color: rgba(191, 7, 58, 1);
+}

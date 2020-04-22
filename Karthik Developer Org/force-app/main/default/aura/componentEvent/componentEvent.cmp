@@ -1,0 +1,25 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="income" type="object"/>
+    <aura:attribute name="myColumns" type="List"/>
+    
+    <aura:registerEvent name="totalIncomeComponentEvent" type="c:LightningComponentEvent"/>
+    
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:handler name="totalIncomeComponentEvent" event="c:LightningComponentEvent" action="{!c.handleRegisteredComponentEvent}"/>
+    
+    <lightning:card title="Income Calculator">
+        <aura:set attribute="actions">
+            <lightning:button label="show/hide income form" onclick="{!c.toggleIncomeForm}"/>
+        </aura:set>
+        <div aura:id="incomeForm" class="hide">
+            <lightning:Input aura:id="source" label="Income source" name="source" required="true"/>
+            <lightning:Input aura:id="amount" label="amount" name="amount" required="true"/>
+            <br/>
+            <lightning:button name="addIncome" label="Add Income" onclick="{!c.addIncome}" variant="brand"/>
+        </div>
+        <br/>
+        <lightning:datatable data="{!v.incomes}" columns="{!v.mycolumns}" keyFields= "sno"/>
+        <br/>
+        <lightning:button name="totalIncome" label="Calculate Total Income" onclick="{!c.fireTotalIncomeComponentEvent}" variant="brand"/>
+    </lightning:card>
+</aura:component>

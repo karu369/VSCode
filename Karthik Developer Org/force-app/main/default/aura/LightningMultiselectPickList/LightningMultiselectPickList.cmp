@@ -1,0 +1,16 @@
+<aura:component controller="FloorPlanRequestNewFormApexController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+    <aura:handler name="init" value="{!this}" action="{! c.initialize }"/>
+    
+    <aura:attribute name="objInfo" type="Floor_Plan_Request__c" default="{sobjectType : 'Floor_Plan_Request__c'}" />
+	<aura:attribute name="listSkillsOptions" type="List" default="[]"/>
+    <aura:attribute name="selectedSkillsItems" type="List" default="[]"/>
+  
+    <lightning:dualListbox aura:id="selectOptions"
+                           name="Skills"
+                           label= "Select Skills" 
+                           sourceLabel="Available Options" 
+                           selectedLabel="Selected Options" 
+                           options="{! v.listSkillsOptions }"
+                           value="{! v.selectedSkillsItems }"/>
+</aura:component>

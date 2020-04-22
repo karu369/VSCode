@@ -1,0 +1,209 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+    <aura:attribute name="newFPR" type="Floor_Plan_Request__c"/>
+    <aura:attribute name="FPRFields" type="Floor_Plan_Request__c"/>
+    <aura:attribute name="newFPRError" type="String"/>
+    <aura:attribute name="PlanType" type="List"/>
+    <aura:attribute name="LVOnly" type="boolean" default="false"/>
+    <aura:attribute name="FMRequiredFields" type="boolean" default="false"/>
+    <aura:attribute name="id" type="String" default="" access="GLOBAL"/>
+	<aura:attribute name="objNew" type="Contact" default="{'sobjectType':'Contact', 'Id':null}" />
+    <aura:handler name="init"  value="{!this}" action="{!c.doInit}"/> 
+    
+    <force:recordData aura:id="FPRRecordCreator"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetRecord="{!v.newFPR}"
+                      targetFields="{!v.FPRFields}"
+                      targetError="{!v.newFRPError}"
+                      mode="EDIT"/>
+    <div aura:id="editDialog" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open slds-modal--large">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium">New Floor Plan Request Form</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium slds-grid slds-wrap ">
+                <div class="slds-page-header" style="cursor: pointer; width:95%;" onclick="{!c.informationSection}">
+                    <section class="slds-clearfix">
+                        <div class="slds-float--left">
+                            <lightning:icon class="slds-show" aura:id="articleOne" iconName="utility:chevronright" size="x-small" alternativeText="Indicates add"/>
+                            <lightning:icon class="slds-hide" aura:id="articleOne" iconName="utility:chevrondown" size="x-small" alternativeText="Indicates dash"/>
+                        </div>
+                        <div class="slds-m-left--large">Information</div>
+                    </section>
+                </div>
+                <div class="slds-hide slds-p-around--medium" aura:id="articleOne">
+                    <lightning:layout title="New Floor Plan Request Form">
+                        <lightning:layoutItem size="10" padding="around-medium" flexibility="auto">
+                                <lightning:input name="connect2Show" label="Connect2 Show" value="{!v.FPRFields.Name}" type="text"/>
+                                <c:FPR_MultiselectPicklist fieldLabel="Plan Type(Multiselect)" 
+                                                           sObjectName="Floor_Plan_Request__c" 
+                                                           fieldName="Plan_Type_Multi_Select__c"   
+                                                           selectedvalue="{!v.PlanType}"
+                                                           aura:Id="FPR_Multiselect"/>
+                            <c:inputLookup type="Contact"
+                                           value="{!v.id}"
+                                           className="form-control"/>
+                                <l_lookup:Lookup objectType="Account"
+                                                 label="Account Name"
+                                                 selectedRecordId="{!v.FPRFields.Account__c}"
+                                                 readOnly="false"
+                                                 showFiveRecent="false"
+                                                 width="400px"
+                                                 />
+                                
+                                
+                                <lightning:input name="RequesterLookup" label="Requester (LookUp)"/>
+                                <lightning:input name="SecondaryRequesterLookup" label="Secondary Requester (LookUp)"/>
+                                <c:LightningPickList fieldLabel="Contract Status" fieldName="Contract_Status__c" objectName="Floor_Plan_Request__c" aura:Id="singlePickList" picklistValue="{!v.FPRFields.Contract_Status__c}"/>
+                                <c:LightningPickList fieldLabel="Production Location" fieldName="UserEntered_Production_Location__c" objectName="Floor_Plan_Request__c" picklistValue="{!v.FPRFields.UserEntered_Production_Location__c}" showFields="{!v.LVOnly}"/>
+                                <lightning:input name="Hall(s)" label="Hall(s)" type="text" maxlength="255"/>
+                        </lightning:layoutItem >
+                        <lightning:layoutItem size="10" flexibility="auto" padding="around-medium" class="slds-p-top_x-large">
+                                <lightning:input name="ClaimedByLookup" label="Claimed By (LookUp)"/>
+                                <lightning:input name="Status" label="Status" type="text" maxlength="30" value="{!v.FPRFields.Status__c}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div>
+                <div class="slds-page-header" style="cursor: pointer; width:95%;" onclick="{!c.layoutInformationSection}">
+                    <section class="slds-clearfix">
+                        <div class="slds-float--left">
+                            <lightning:icon class="slds-show" aura:id="articleTwo" iconName="utility:chevronright" size="x-small" alternativeText="Indicates add"/>
+                            <lightning:icon class="slds-hide" aura:id="articleTwo" iconName="utility:chevrondown" size="x-small" alternativeText="Indicates dash"/>
+                        </div>
+                        <div class="slds-m-left--large">Layout Information</div>
+                    </section>
+                </div>
+                <div class="slds-hide slds-p-around--medium" aura:id="articleTwo">
+                    <lightning:layout>
+                        <lightning:layoutItem size="6" flexibility="auto" padding="around-medium">
+                                <lightning:input label="Use Previous Year Layout" type="checkbox"/>
+                                <lightning:input label="Max Layout - Horizontal 10x10" type="checkbox" class="slds-p-top_x-large" checked="{!v.FPRFields.Max_Layout_Horizontal_10x10__c}"/>
+                                <lightning:input label="Max Layout - Horizontal 8x10" type="checkbox" class="slds-p-top_x-large" checked="{!v.FPRFields.Max_Layout_Horizontal_8x10__c}"/>
+                                <lightning:input label="Max Layout - Vertical 10x10" type="checkbox" class="slds-p-top_x-large" checked="{!v.FPRFields.Max_Layout_Vertical_10x10__c}"/>
+                                <lightning:input label="Max Layout - Vertical 8x10" type="checkbox" class="slds-p-top_x-large" checked="{!v.FPRFields.Max_Layout_Vertical_8x10__c}"/>
+                                <lightning:input label="Floor Plan Release Complete" type="checkbox" class="slds-p-top_x-large" checked="{!v.FPRFields.Floor_Plan_Release_Complete__c}"/>
+                                <lightning:input label="Other Layout (Describe)" type="text" class="slds-p-top_large" value="{!v.FPRFields.Other_Layout__c}"/>
+                                <lightning:input label="Scale" type="text" maxlength="5" class="slds-m-top_medium" value="{!v.FPRFields.Scale__c}"/>
+                                <lightning:inputRichText label="Instructions"  class="slds-m-top_xx-large" value="{!v.FPRFields.Instructions__c}"/>                
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" flexibility="auto" class="slds-p-top_x-large">
+                            <lightning:input name="NumberofBooths" label="Number of Booths" type="text" value="{!v.FPRFields.Number_of_Booths__c}"/>
+                            <c:LightningPickList fieldLabel="Numbering System" fieldName="Numbering_System__c" objectName="Floor_Plan_Request__c" picklistValue="{!v.FPRFields.Numbering_System__c}"/>
+                            <lightning:input name="Quantity 8.5x11" label="Quantity 8.5x11" class="slds-p-top_medium" value="{!v.FPRFields.Quantity_8_5x11__c}"/>
+                            <lightning:input name="Quantity 11x17" label="Quantity 11x17" class="slds-p-top_medium" value="{!v.FPRFields.Quantity_11x17__c}"/>
+                            <lightning:input name="Other Print Size/layout" label="Other Print Size/layout 1" class="slds-p-top_medium" value="{!v.FPRFields.Other_Print_Size_layout1__c}"/>
+                            <lightning:input name="Other Print Size/layout" label="Other Print Size/layout 2"  class="slds-p-top_medium" value="{!v.FPRFields.Other_Print_Size_layout2__c}"/>
+                            <lightning:input name="Other Print Size Quantity" label="Other Print Size Quantity 1" class="slds-p-top_medium" value="{!v.FPRFields.Other_Print_Size_Quantity1__c}"/>
+                            <lightning:inputRichText class="slds-m-top_xx-large" label="Drafter Notes" />
+                        </lightning:layoutItem>
+                    </lightning:layout> 
+                </div>
+                
+                <div class="slds-page-header" style="cursor: pointer; width:95%;" onclick="{!c.drafterTimeLogSection}">
+                    <section class="slds-clearfix">
+                        <div class="slds-float--left">
+                            <lightning:icon class="slds-show" aura:id="articleThree" iconName="utility:chevronright" size="x-small" alternativeText="Indicates add"/>
+                            <lightning:icon class="slds-hide" aura:id="articleThree" iconName="utility:chevrondown" size="x-small" alternativeText="Indicates dash"/>
+                        </div>
+                        <div class="slds-m-left--large">Drafter Time Log</div>
+                    </section>
+                </div>
+                <div class="slds-hide slds-p-around--medium" aura:id="articleThree">
+                    <lightning:layout>
+                        <lightning:layoutItem size="10" flexibility="auto" padding="around-medium" >
+                                <lightning:input name="Work Log Date/Time 1" label="Work Log Date/Time 1" type="datetime" value="{!v.FPRFields.Work_Log_Date_Time_1__c}"/>
+                                <lightning:input name="Work Log Date/Time 2" label="Work Log Date/Time 2" type="datetime" value="{!v.FPRFields.Work_Log_Date_Time_2__c}"/>
+                                <lightning:input name="Work Log Date/Time 3" label="Work Log Date/Time 3" type="datetime" value="{!v.FPRFields.Work_Log_Date_Time_3__c}"/>
+                                <lightning:input name="Work Log Date/Time 4" label="Work Log Date/Time 4" type="datetime" value="{!v.FPRFields.Work_Log_Date_Time_4__c}"/>
+                                <lightning:input name="Work Log Date/Time 5" label="Work Log Date/Time 5" type="datetime" value="{!v.FPRFields.Work_Log_Date_Time_5__c}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="10" flexibility="auto" padding="around-medium" class="slds-m-top_xxx-large">
+                            
+                                <lightning:input name="Hours 1" label="Hours 1" type="number" class="slds-m-top_xx-large" value="{!v.FPRFields.Drafter_Hours_1__c}"/>
+                                <lightning:input name="Hours 2" label="Hours 2" type="number" class="slds-m-top_x-large" value="{!v.FPRFields.Drafter_Hours_2__c}"/>
+                                <lightning:input name="Hours 3" label="Hours 3" type="number" class="slds-m-top_x-large" value="{!v.FPRFields.Drafter_Hours_3__c}"/>
+                                <lightning:input name="Hours 4" label="Hours 4" type="number" class="slds-m-top_large" value="{!v.FPRFields.Drafter_Hours_4__c}"/>
+                                <lightning:input name="Hours 5" label="Hours 5" type="number" class="slds-m-top_large" value="{!v.FPRFields.Drafter_Hours_5__c}"/>
+                            
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div>
+                
+                <div class="slds-page-header" style="cursor: pointer; width:95%;" onclick="{!c.fireMarshalingSection}">
+                    <section class="slds-clearfix">
+                        <div class="slds-float--left">
+                            <lightning:icon class="slds-show" aura:id="articleFour" iconName="utility:chevronright" size="x-small" alternativeText="Indicates add"/>
+                            <lightning:icon class="slds-hide" aura:id="articleFour" iconName="utility:chevrondown" size="x-small" alternativeText="Indicates dash"/>
+                        </div>
+                        <div class="slds-m-left--large">Fire Marshaling</div>
+                    </section>
+                </div>
+                <div class="slds-hide slds-p-around--medium" aura:id="articleFour">
+                    <lightning:layout>
+                        <lightning:layoutItem size="10" flexibility="auto" padding="around-medium" >
+                            
+                                <c:LightningPickList fieldLabel="Fire Marshalling" fieldName="Fire_Marshalling__c" objectName="Floor_Plan_Request__c" picklistValue="{!v.FPRFields.Fire_Marshalling__c}" requiredFields="{!v.FMRequiredFields}"/>
+                                <lightning:input name="Move In Date" label="Move In Date" type="datetime" value="{!v.FPRFields.Move_In_Date__c}"/>
+                                <lightning:input name="Move Out Date" label="Move Out Date"  type="datetime" value="{!v.FPRFields.Move_Out_Date__c}"/>
+                                <aura:if isTrue="{!v.LVOnly}">
+                                    <lightning:input name="(LV Only)Date/TimeofInspection" label="(LV Only) Date/Time of Inspection"  type="datetime" value="{!v.FPRFields.LV_Only_Date_Time_of_Inspection__c}"/>
+                                    <lightning:input name="(LV Only) Contact Name" label="(LV Only) Contact Name" type="text" value="{!v.FPRFields.LV_Only_Contact_Name__c}"/>
+                                    <lightning:input name="(LV Only) Contact Phone Number" label="(LV Only) Contact Phone Number" type="phone" value="{!v.FPRFields.LV_Only_Contact_Phone_Number__c}"/>
+                                </aura:if>
+                            
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="10" flexibility="auto" padding="around-medium" class="slds-m-top_large">
+                            
+                                    <lightning:input name="Facility Contact Name" required="{!v.FMRequiredFields}" label="Facility Contact Name" type="text" value="{!v.FPRFields.Facility_Contact_Name__c}"/>
+                                    <lightning:input name="Phone Number" required="{!v.FMRequiredFields}" label="Phone Number" type="phone" value="{!v.FPRFields.Facility_Contact_Phone_Numbe__c}"/>
+                                    <lightning:input name="Email" required="{!v.FMRequiredFields}" label="Email" type="email" value="{!v.FPRFields.Facility_Contact_Email__c}"/>
+                                
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div>
+                
+                <div class="slds-page-header" style="cursor: pointer; width:95%;" onclick="{!c.electricalDownloadSection}">
+                    <section class="slds-clearfix">
+                        <div class="slds-float--left">
+                            <lightning:icon class="slds-show" aura:id="articleFive" iconName="utility:chevronright" size="x-small" alternativeText="Indicates add"/>
+                            <lightning:icon class="slds-hide" aura:id="articleFive" iconName="utility:chevrondown" size="x-small" alternativeText="Indicates dash"/>
+                        </div>
+                        <div class="slds-m-left--large">Electrical Download</div>
+                    </section>
+                </div>
+                <div class="slds-hide slds-p-around--medium" aura:id="articleFive">
+                    <lightning:layout>
+                        <lightning:layoutItem size="10" flexibility="auto" padding="around-medium">
+                            
+                                <lightning:input class="inputLongText" name="HallBreakdown" label="HallBreakdown" maxlength="32768" value="{!v.FPRFields.Hall_Breakdown__c}"/>
+                                <lightning:input name="ElectricalDownloadDueDate1" label="Electrical Download Due Date 1" type="date" value="{!v.FPRFields.Electrical_Download_Due_Date_1__c}"/>
+                                <c:LightningPickList fieldLabel="Layer Choices" fieldName="Electrical_Layer_Choices__c" objectName="Floor_Plan_Request__c" picklistValue="{!v.FPRFields.Electrical_Layer_Choices__c}"/>
+                                <lightning:input name="Quantity 11x17 by Hall" label="Quantity 11x17 by Hall" type="number" maxlength="3" value="{!v.FPRFields.Quantity_11x17_by_Hall__c}"/>
+                                <lightning:input name="Quantity Full Size by Hall" label="Quantity Full Size by Hall" type="number" maxlength="3" value="{!v.FPRFields.Quantity_Full_Size_by_Hall__c}"/>
+                                <lightning:input name="Quantity PDF by Hall	"  label="Quantity PDF by Hall" type="number" maxlength="3" value="{!v.FPRFields.Quantity_PDF_by_Hall__c}"/>
+                            
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="10" flexibility="auto" padding="around-medium" class="slds-m-top_large">
+                            <lightning:card>
+                                <aura:set attribute="actions">
+                                    <div class="iconDiv">
+                                        <lightning:buttonIcon alternativeText="AddElectricalDownload" name='Add' iconClass="addBtn" iconName="utility:add" size="medium" variant="bare" onclick="{!c.addRow}"/> &nbsp;&nbsp;&nbsp;
+                                        <lightning:buttonIcon alternativeText="DeleteElectricalDownload" name='Delete' iconClass="delBtn" iconName="utility:delete" size="medium" variant="bare" onclick="{!c.delRow}"/> 
+                                    </div>
+                                </aura:set>
+                                <lightning:input name="Completed 1" label="Completed 1" type="date"/>
+                                <lightning:input name="Time Spent 1" label="Time Spent 1" type="number"/>
+                            </lightning:card>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div>
+                
+            </div>
+            <div class="slds-modal__footer">                
+                <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelDialog}"/>
+                <lightning:button variant="brand" label="Submit" onclick="{!c.handleSaveRecord}" />
+            </div>
+        </div>
+    </div>
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop--open"></div>
+</aura:component>

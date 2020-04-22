@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="totalIncome" type="decimal"/>
+    <aura:handler name="totalIncomeComponentEvent" event="c:LightningComponentEvent" action="{!c.handleTotalIncomeComponentEvent}"/>
+    outer Component
+    
+    <div class="innerComponent">
+        Inner Component Section Begin
+        <c:componentEvent/>
+        Inner Component Section End
+    </div>
+    
+    <span class="totalIncome">Total Income = {!v.totalIncome}</span>
+</aura:component>
